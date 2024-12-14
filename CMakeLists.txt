@@ -8,7 +8,8 @@ project(nonlinear_least_squares)
 set(CMAKE_CXX_STANDARD 17)
 
 # Add Header List
-set(HEADER_LIST ${PROJECT_SOURCE_DIR}/include/NonlinearOptimizer.h)
+set(HEADER_LIST ${PROJECT_SOURCE_DIR}/include/NonlinearOptimizer.h
+                ${PROJECT_SOURCE_DIR}/include/ModelFunctor.h)
 
 # Add Library
 add_library(nonlinear_least_squares INTERFACE)

@@ -4,6 +4,7 @@
 #include <Eigen/Dense>
 #include <iostream>
 #include <optional>
+#include "ModelFunctor.h"
 
 /**
  * Nonlinear Optimizer
@@ -15,12 +16,13 @@ public:
   /**
    * c'tor
    */
-  NonlinearOptimizer();
+  NonlinearOptimizer(ModelFunctor& model) : mModelFunctor(model) {}
 
   
 
 private:
   // underlying model function: y(x,a)
+  std::shared_ptr<ModelFunctor> mModelFunctor;
 
   // Model weights [a1, a2, ..., an]
 };
