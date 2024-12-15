@@ -9,11 +9,11 @@
  */
 struct SolverOpts {
   // General Options
-  int max_iter = 1000;                 // max number of iterations
+  int max_iter = 100;                 // max number of iterations
   double convergence_criterion = 1e-3; // convergence criterion
 
   // Gradient Descent options
-  double alpha = 0.1; // learning rate
+  double alpha = 0.0001; // learning rate
 };
 
 #endif // SOLVER_OPTS_H

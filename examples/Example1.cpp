@@ -17,11 +17,24 @@ int main() {
       std::make_shared<Example1Jacobian>();
   std::make_shared<Example1Jacobian>();
 
-  // Define the model parameters
-  Eigen::Vector3d A{0.0, 0.0, 0.0};
-  Eigen::Matrix3d X;
-  X << 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0;
-  Eigen::Vector3d Y{1.0, 2.0, 3.0};
+  // Define the truth model parameters
+  Eigen::Vector3d ATruth{3.0, 2.0, 1.0};
+  
+  // Generate simulated data
+  double start = 0.0;
+  double end = 10.0;
+  int numPoints = 100;
+  Eigen::VectorXd X(numPoints);
+  Eigen::VectorXd Y(numPoints);
+  for (int i = 0; i < numPoints; i++) {
+    Eigen::VectorXd xCurr(1);
+    xCurr(0) = start + i * (end - start) / (numPoints - 1); 
+    X(i) = xCurr(0);
+    Y(i) = (*modelPtr)(ATruth, xCurr) + 0.0; // TODO: Add noise
+  }
+
+  // Initialize model parameter guesses
+  Eigen::Vector3d A = Eigen::Vector3d::Zero();
 
   // Use the default solver options
   SolverOpts opts;

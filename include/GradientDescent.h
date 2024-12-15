@@ -49,22 +49,22 @@ public:
       // Increment the iteration count
       iter += 1;
 
-      // Compute Current Model and Jacobians
-      Eigen::VectorXd Y = Eigen::VectorXd::Zero(Y_.size());
-      Eigen::MatrixXd J = Eigen::MatrixXd::Zero(X_.rows(), A_.size());
-      for (int i = 0; i < J.rows(); i++) {
-        // Compute Model
-        Y(i) = (*mModelFunctor)(A_, X_.row(i));
+      // Compute the Jacobian of the Cost Function
+      Eigen::MatrixXd J = Eigen::MatrixXd::Zero(1, A_.size());
+      for (int i = 0; i < Y_.size(); i++) {
+        // Compute Model Prediction Error
+        double e = (*mModelFunctor)(A_, X_.row(i)) - Y_(i);
 
-        // Compute Jacobian
-        J.row(i) = (*mJacobianFunctor)(A_, X_.row(i));
+        // Compute Jacobians
+        J = J + (*mJacobianFunctor)(A_, X_.row(i), e);
       }
-
+      J = J / Y_.size();
+      
       // Compute the gradient descent step
-      Eigen::VectorXd hgd = opts_.alpha * J.transpose() * (Y_ - Y);
+      Eigen::MatrixXd hgd = opts_.alpha * J;
 
       // Update the model parameters
-      A_ = A_ - hgd;
+      A_ = A_ - hgd.transpose();
 
       // Print Current Iteration
       std::cout << "Iter = " << iter << std::endl;

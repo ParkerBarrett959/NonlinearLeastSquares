@@ -23,10 +23,12 @@ public:
    * @param a A vector containing the model parameters that are being solved for
    * @param x A vector containing the current independent variables to evaluate
    * the model at
+   * @param e A double contsaining the error at the current step
    * @return An Eigen::MatrixXd representing the model output value
    */
   virtual Eigen::MatrixXd operator()(const Eigen::VectorXd &a,
-                                     const Eigen::VectorXd &x) = 0;
+                                     const Eigen::VectorXd &x,
+                                     const double e) = 0;
 };
 
-#endif // MODEL_Jacobian_H
+#endif // MODEL_JACOBIAN_H
