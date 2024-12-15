@@ -3,7 +3,7 @@
 
 #include "ModelFunctor.h"
 #include "ModelJacobian.h"
-#include <iostream>
+#include "SolverOpts.h"
 #include <memory>
 
 /**
@@ -20,8 +20,9 @@ public:
   NonlinearOptimizer(std::shared_ptr<ModelFunctor> &model,
                      std::shared_ptr<ModelJacobian> &jacobian,
                      const Eigen::VectorXd &A, const Eigen::MatrixXd &X,
-                     const Eigen::VectorXd &Y)
-      : mModelFunctor(model), mJacobianFunctor(jacobian), A_(A), X_(X), Y_(Y) {
+                     const Eigen::VectorXd &Y, const SolverOpts &opts)
+      : mModelFunctor(model), mJacobianFunctor(jacobian), A_(A), X_(X), Y_(Y),
+        opts_(opts) {
     // Verify X and Y dimensions are correct
     if (X_.rows() == Y_.size()) {
       modelInitialized_ = true;
@@ -54,6 +55,9 @@ protected:
 
   // Vector of dependent variables [y1, ..., yn]
   Eigen::VectorXd Y_;
+
+  // Solver Options
+  SolverOpts opts_;
 
   // Model intialized flag
   bool modelInitialized_ = false;

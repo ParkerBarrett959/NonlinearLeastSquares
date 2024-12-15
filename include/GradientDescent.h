@@ -24,12 +24,13 @@ public:
    * to an independent data point, while each column corresponds to the set of
    * independent variables in a single data point.
    * @param Y An n dimensional vector of dependent variables
+   * @param opts The solver options to use
    */
   GradientDescent(std::shared_ptr<ModelFunctor> &model,
                   std::shared_ptr<ModelJacobian> &jacobian,
                   const Eigen::VectorXd &A, const Eigen::MatrixXd &X,
-                  const Eigen::VectorXd &Y)
-      : NonlinearOptimizer(model, jacobian, A, X, Y) {}
+                  const Eigen::VectorXd &Y, const SolverOpts &opts)
+      : NonlinearOptimizer(model, jacobian, A, X, Y, opts) {}
 
   /**
    * Function to run the gradient descent optimization

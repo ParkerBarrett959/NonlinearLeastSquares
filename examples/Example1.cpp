@@ -5,6 +5,7 @@
  * of the nonlinear least squares solver(s) on a linear objective function.
  */
 #include "GradientDescent.h"
+#include "SolverOpts.h"
 #include "functors/Example1Functor.h"
 #include "functors/Example1Jacobian.h"
 #include <iostream>
@@ -22,8 +23,11 @@ int main() {
   X << 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0;
   Eigen::Vector3d Y{1.0, 2.0, 3.0};
 
+  // Use the default solver options
+  SolverOpts opts;
+
   // Create a Gradient Descent Nonlinear Optimizer
-  GradientDescent gd(modelPtr, jacobianPtr, A, X, Y);
+  GradientDescent gd(modelPtr, jacobianPtr, A, X, Y, opts);
   if (gd.isInitialized()) {
     std::cout << "Gradient Descent Model Successfully Initialized!"
               << std::endl;
