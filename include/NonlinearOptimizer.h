@@ -4,6 +4,7 @@
 #include "ModelFunctor.h"
 #include "ModelJacobian.h"
 #include "SolverOpts.h"
+#include <iostream>
 #include <memory>
 
 /**

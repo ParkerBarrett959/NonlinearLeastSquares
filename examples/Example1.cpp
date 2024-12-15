@@ -33,5 +33,8 @@ int main() {
               << std::endl;
   }
 
+  // Run optimization
+  bool success = gd.optimize();
+
   return 0;
 }

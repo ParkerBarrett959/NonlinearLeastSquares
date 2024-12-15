@@ -24,13 +24,13 @@ public:
     assert(x.size() == 3);
 
     // Calculate Jacobian terms
-    double dydx1 = a(0);
-    double dydx2 = 2*a(1)*x(1);
-    double dydx3 = 3*a(2)*x(2)*x(2);
+    double dyda1 = x(0);
+    double dyda2 = x(1)*x(1);
+    double dyda3 = x(2)*x(2)*x(2);
     
     // Create Jacobian Matrix
     Eigen::Matrix<double, 1, 3> J;
-    J << dydx1, dydx2, dydx3;
+    J << dyda1, dyda2, dyda3;
     return J;
   }
 };

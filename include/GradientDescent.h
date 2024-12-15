@@ -37,7 +37,48 @@ public:
    *
    * @return True if the optimization succeeded, false otherwise
    */
-  bool optimize() { return true; }
+  bool optimize() {
+    // Initial print statement
+    std::cout << "Gradient Descent optimization" << std::endl;
+    std::cout << "------------------------------------------------"
+              << std::endl;
+    // Loop until convergence
+    bool converged = false;
+    int iter = 0;
+    while (!converged && iter < opts_.max_iter) {
+      // Increment the iteration count
+      iter += 1;
+
+      // Compute Current Model and Jacobians
+      Eigen::VectorXd Y = Eigen::VectorXd::Zero(Y_.size());
+      Eigen::MatrixXd J = Eigen::MatrixXd::Zero(X_.rows(), A_.size());
+      for (int i = 0; i < J.rows(); i++) {
+        // Compute Model
+        Y(i) = (*mModelFunctor)(A_, X_.row(i));
+
+        // Compute Jacobian
+        J.row(i) = (*mJacobianFunctor)(A_, X_.row(i));
+      }
+
+      // Compute the gradient descent step
+      Eigen::VectorXd hgd = opts_.alpha * J.transpose() * (Y_ - Y);
+
+      // Update the model parameters
+      A_ = A_ - hgd;
+
+      // Print Current Iteration
+      std::cout << "Iter = " << iter << std::endl;
+      std::cout << "    Parameters = " << A_.transpose() << std::endl;
+      std::cout << "    Step Size = " << hgd.norm() << std::endl;
+
+      // Check for convergence
+      if (hgd.norm() < opts_.convergence_criterion) {
+        std::cout << "Gradient descent converged!" << std::endl;
+        converged = true;
+      }
+    }
+    return true;
+  }
 };
 
 #endif // GRADIENT_DESCENT_H

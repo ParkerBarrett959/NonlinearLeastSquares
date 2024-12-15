@@ -8,11 +8,12 @@
  * squares solvers.
  */
 struct SolverOpts {
-  // Maximum number of iterations
-  int max_iter = 1000;
+  // General Options
+  int max_iter = 1000;                 // max number of iterations
+  double convergence_criterion = 1e-3; // convergence criterion
 
-  // Convergence criterion (change in parameters between steps)
-  double convergence_criterion = 1e-3;
+  // Gradient Descent options
+  double alpha = 0.1; // learning rate
 };
 
 #endif // SOLVER_OPTS_H
