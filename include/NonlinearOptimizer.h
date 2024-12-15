@@ -2,7 +2,7 @@
 #define NONLINEAR_OPTIMIZER_H
 
 #include "ModelFunctor.h"
-#include <Eigen/Dense>
+#include "ModelJacobian.h"
 #include <iostream>
 #include <memory>
 
@@ -18,9 +18,10 @@ public:
    * c'tor
    */
   NonlinearOptimizer(std::shared_ptr<ModelFunctor> &model,
+                     std::shared_ptr<ModelJacobian> &jacobian,
                      const Eigen::VectorXd &A, const Eigen::MatrixXd &X,
                      const Eigen::VectorXd &Y)
-      : mModelFunctor(model), A_(A), X_(X), Y_(Y) {
+      : mModelFunctor(model), mJacobianFunctor(jacobian), A_(A), X_(X), Y_(Y) {
     // Verify X and Y dimensions are correct
     if (X_.rows() == Y_.size()) {
       modelInitialized_ = true;
@@ -40,6 +41,9 @@ public:
 protected:
   // underlying model function: y(x,a)
   std::shared_ptr<ModelFunctor> mModelFunctor;
+
+  // underlying model Jacobian function: dy(x,a)/dx
+  std::shared_ptr<ModelJacobian> mJacobianFunctor;
 
   // Vector of model weights [a1, a2, ..., ap]
   Eigen::VectorXd A_;

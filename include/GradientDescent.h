@@ -1,7 +1,6 @@
 #ifndef GRADIENT_DESCENT_H
 #define GRADIENT_DESCENT_H
 
-#include "ModelFunctor.h"
 #include "NonlinearOptimizer.h"
 
 /**
@@ -17,6 +16,8 @@ public:
    *
    * @param model A shared pointer to a functor representing the nonlinear model
    * to be solved.
+   * @param jacobian A shared pointer to a functor representing the nonlinear
+   * Jacobian of the model
    * @param A A vector of parameters to be estimated in the least squares
    * problem
    * @param X An nxm matrix of model independent variables. Each row corresponds
@@ -25,12 +26,13 @@ public:
    * @param Y An n dimensional vector of dependent variables
    */
   GradientDescent(std::shared_ptr<ModelFunctor> &model,
+                  std::shared_ptr<ModelJacobian> &jacobian,
                   const Eigen::VectorXd &A, const Eigen::MatrixXd &X,
                   const Eigen::VectorXd &Y)
-      : NonlinearOptimizer(model, A, X, Y) {}
+      : NonlinearOptimizer(model, jacobian, A, X, Y) {}
 
   /**
-   * Functionm to run the gradient descent optimization
+   * Function to run the gradient descent optimization
    *
    * @return True if the optimization succeeded, false otherwise
    */

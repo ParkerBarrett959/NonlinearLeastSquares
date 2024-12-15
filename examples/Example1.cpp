@@ -6,11 +6,15 @@
  */
 #include "GradientDescent.h"
 #include "functors/Example1Functor.h"
+#include "functors/Example1Jacobian.h"
 #include <iostream>
 
 int main() {
-  // Create a functor for the example 1 problem
+  // Create a functor for the example 1 problem and the Jacobian
   std::shared_ptr<ModelFunctor> modelPtr = std::make_shared<Example1Functor>();
+  std::shared_ptr<ModelJacobian> jacobianPtr =
+      std::make_shared<Example1Jacobian>();
+  std::make_shared<Example1Jacobian>();
 
   // Define the model parameters
   Eigen::Vector3d A{0.0, 0.0, 0.0};
@@ -19,7 +23,7 @@ int main() {
   Eigen::Vector3d Y{1.0, 2.0, 3.0};
 
   // Create a Gradient Descent Nonlinear Optimizer
-  GradientDescent gd(modelPtr, A, X, Y);
+  GradientDescent gd(modelPtr, jacobianPtr, A, X, Y);
   if (gd.isInitialized()) {
     std::cout << "Gradient Descent Model Successfully Initialized!"
               << std::endl;

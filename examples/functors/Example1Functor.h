@@ -29,5 +29,4 @@ public:
     return (a(0)*x(0) + a(1)*x(1)*x(1) + a(2)*x(2)*x(2)*x(2));
   }
 };
-
 #endif // EXAMPLE_1_FUNCTOR_H
