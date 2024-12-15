@@ -32,6 +32,11 @@ public:
    */
   virtual bool optimize() = 0;
 
+  /**
+   * Is Initialized getter function
+   */
+  bool isInitialized() { return modelInitialized_; }
+
 protected:
   // underlying model function: y(x,a)
   std::shared_ptr<ModelFunctor> mModelFunctor;

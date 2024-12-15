@@ -10,7 +10,7 @@ set(CMAKE_CXX_STANDARD 17)
 # Find Eigen
 find_package(Eigen3 REQUIRED)
 
-# Add Header List
+# Add Library Header List
 set(HEADER_LIST ${PROJECT_SOURCE_DIR}/include/NonlinearOptimizer.h
                 ${PROJECT_SOURCE_DIR}/include/ModelFunctor.h
                 ${PROJECT_SOURCE_DIR}/include/GradientDescent.h)
@@ -22,12 +22,15 @@ add_library(nonlinear_least_squares INTERFACE)
 target_include_directories(nonlinear_least_squares INTERFACE ${PROJECT_SOURCE_DIR}/include
 ${EIGEN3_INCLUDE_DIRS} )
 
+# Add Example Header List
+set(EXAMPLE_HEADER_LIST ${PROJECT_SOURCE_DIR}/examples/functors/Example1Functor.h)
+
 # Example Case Build
-add_executable( example1 ${PROJECT_SOURCE_DIR}/examples/Example1.cpp ${HEADER_LIST})
+add_executable( example1 ${PROJECT_SOURCE_DIR}/examples/Example1.cpp ${HEADER_LIST} ${EXAMPLE_HEADER_LIST})
 target_link_libraries(
   example1
   nonlinear_least_squares
 )
 
 # Target Include Directories
-target_include_directories(example1 PUBLIC ${PROJECT_SOURCE_DIR}/include ${EIGEN_INCLUDE_DIRS})
+target_include_directories(example1 PUBLIC ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/examples ${EIGEN_INCLUDE_DIRS})

@@ -2,6 +2,7 @@
 #define MODEL_FUNCTOR_H
 
 #include <Eigen/Dense>
+#include <cassert>
 
 /**
  * Model functor
