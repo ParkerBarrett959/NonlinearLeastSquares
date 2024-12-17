@@ -16,14 +16,14 @@ int main() {
 
   // Define the truth model parameters
   Eigen::Vector3d ATruth{3.0, 2.0, 1.0};
-  
+
   // Generate simulated data
   double start = 0.0;
   double end = 10.0;
   int numPoints = 100;
   Eigen::VectorXd X(numPoints);
   Eigen::VectorXd Y(numPoints);
-  for (int i = 0; i < numPoints; i++) { 
+  for (int i = 0; i < numPoints; i++) {
     X(i) = start + i * (end - start) / (numPoints - 1);
     Y(i) = (*modelPtr)(ATruth, X(i)) + 0.0; // TODO: Add noise
   }

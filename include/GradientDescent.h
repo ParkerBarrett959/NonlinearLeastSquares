@@ -16,8 +16,8 @@ public:
    *
    * @param model A shared pointer to a functor representing the nonlinear model
    * to be solved.
-   * @param A An n dimensional vector of parameters to be estimated in the least squares
-   * problem
+   * @param A An n dimensional vector of parameters to be estimated in the least
+   * squares problem
    * @param X An m dimensional vector of independent variables
    * @param Y An n dimensional vector of dependent variables
    * @param opts The solver options to use
@@ -54,7 +54,7 @@ public:
         J = J + (*mJacobianFunctor)(A_, X_.row(i), e);
       }
       J = J / Y_.size();
-      
+
       // Compute the gradient descent step
       Eigen::MatrixXd hgd = opts_.alpha * J;
 

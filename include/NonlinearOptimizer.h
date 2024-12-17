@@ -35,7 +35,7 @@ public:
 
   /**
    * Compute the least squares cost function
-   * 
+   *
    * @return J The sum of the squares of the residuals
    */
   double computeJ() {
@@ -46,7 +46,6 @@ public:
     }
     return J;
   }
-
 
   /**
    * Is Initialized getter function

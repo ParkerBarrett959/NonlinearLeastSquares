@@ -5,3 +5,4 @@ clang-format -i include/*.h
 
 # Example Files
 clang-format -i examples/*.cpp
+clang-format -i examples/functors/*.h
