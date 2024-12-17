@@ -13,7 +13,6 @@ find_package(Eigen3 REQUIRED)
 # Add Library Header List
 set(HEADER_LIST ${PROJECT_SOURCE_DIR}/include/NonlinearOptimizer.h
                 ${PROJECT_SOURCE_DIR}/include/ModelFunctor.h
-                ${PROJECT_SOURCE_DIR}/include/ModelJacobian.h
                 ${PROJECT_SOURCE_DIR}/include/GradientDescent.h
                 ${PROJECT_SOURCE_DIR}/include/SolverOpts.h)
 
@@ -25,8 +24,7 @@ target_include_directories(nonlinear_least_squares INTERFACE ${PROJECT_SOURCE_DI
 ${EIGEN3_INCLUDE_DIRS} )
 
 # Add Example Header List
-set(EXAMPLE_HEADER_LIST ${PROJECT_SOURCE_DIR}/examples/functors/Example1Functor.h
-                        ${PROJECT_SOURCE_DIR}/examples/functors/Example1Jacobian.h)
+set(EXAMPLE_HEADER_LIST ${PROJECT_SOURCE_DIR}/examples/functors/Example1Functor.h)
 
 # Example Case Build
 add_executable( example1 ${PROJECT_SOURCE_DIR}/examples/Example1.cpp ${HEADER_LIST} ${EXAMPLE_HEADER_LIST})

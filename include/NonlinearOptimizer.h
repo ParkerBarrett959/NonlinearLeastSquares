@@ -2,7 +2,6 @@
 #define NONLINEAR_OPTIMIZER_H
 
 #include "ModelFunctor.h"
-#include "ModelJacobian.h"
 #include "SolverOpts.h"
 #include <iostream>
 #include <memory>
@@ -41,10 +40,25 @@ public:
   double computeJ() {
     double J = 0.0;
     for (int i = 0; i < Y_.size(); i++) {
-      double yHati = (*mModelFunctor)(A_, X_.row(i));
-      J += (Y_(i) - yHati) * (Y_(i) - yHati)
+      double yHati = (*mModelFunctor)(A_, X_(i));
+      J += (Y_(i) - yHati) * (Y_(i) - yHati);
     }
     return J;
+  }
+
+  /**
+   * Compute the gradient of the least squares cost function
+   *
+   * @return dJdA The gradient of the cost wrt the model parameters
+   */
+  Eigen::VectorXd computeGradientJ() {
+    Eigen::VectorXd dJdA = Eigen::VectorXd::Zero(A_.size());
+    for (int i = 0; i < Y_.size(); i++) {
+      double yHati = (*mModelFunctor)(A_, X_(i));
+      Eigen::VectorXd dyidA = (*mModelFunctor).gradient(A_, X_(i));
+      dJdA -= 2.0 * (Y_(i) - yHati) * dyidA;
+    }
+    return dJdA;
   }
 
   /**

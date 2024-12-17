@@ -33,7 +33,8 @@ public:
    * @return A vector representing the gradient of the model wrt the parameters
    */
   Eigen::VectorXd gradient(const Eigen::VectorXd &a, const double x) override {
-    return (a(0) * x + a(1) * x * x + a(2) * x * x * x);
+    Eigen::Vector3d dyda{x, x * x, x * x * x};
+    return dyda;
   }
 };
 #endif // EXAMPLE_1_FUNCTOR_H

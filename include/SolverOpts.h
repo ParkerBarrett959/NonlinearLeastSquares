@@ -13,7 +13,7 @@ struct SolverOpts {
   double convergence_criterion = 1e-3; // convergence criterion
 
   // Gradient Descent options
-  double alpha = 0.0001; // learning rate
+  double alpha = 0.01; // learning rate
 };
 
 #endif // SOLVER_OPTS_H

@@ -7,7 +7,6 @@
 #include "GradientDescent.h"
 #include "SolverOpts.h"
 #include "functors/Example1Functor.h"
-#include "functors/Example1Jacobian.h"
 #include <iostream>
 
 int main() {
