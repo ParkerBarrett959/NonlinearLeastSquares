@@ -29,7 +29,8 @@ int main() {
   }
 
   // Initialize model parameter guesses
-  Eigen::VectorXd A = Eigen::VectorXd::Zero(4);
+  Eigen::VectorXd A(4);
+  A << 11.8, -7.8, 56.0, -20.0;
 
   // Use the default solver options
   SolverOpts opts;
