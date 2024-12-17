@@ -11,7 +11,7 @@
  * Nonlinear Optimizer
  *
  * @brief: This is a pure virtual class defininig the interface for a nonlinear
- * optomizer.
+ * optimizer.
  */
 class NonlinearOptimizer {
 public:
@@ -19,13 +19,11 @@ public:
    * c'tor
    */
   NonlinearOptimizer(std::shared_ptr<ModelFunctor> &model,
-                     std::shared_ptr<ModelJacobian> &jacobian,
-                     const Eigen::VectorXd &A, const Eigen::MatrixXd &X,
+                     const Eigen::VectorXd &A, const Eigen::VectorXd &X,
                      const Eigen::VectorXd &Y, const SolverOpts &opts)
-      : mModelFunctor(model), mJacobianFunctor(jacobian), A_(A), X_(X), Y_(Y),
-        opts_(opts) {
+      : mModelFunctor(model), A_(A), X_(X), Y_(Y), opts_(opts) {
     // Verify X and Y dimensions are correct
-    if (X_.rows() == Y_.size()) {
+    if (X_.size() == Y_.size()) {
       modelInitialized_ = true;
     }
   }
@@ -36,25 +34,36 @@ public:
   virtual bool optimize() = 0;
 
   /**
+   * Compute the least squares cost function
+   * 
+   * @return J The sum of the squares of the residuals
+   */
+  double computeJ() {
+    double J = 0.0;
+    for (int i = 0; i < Y_.size(); i++) {
+      double yHati = (*mModelFunctor)(A_, X_.row(i));
+      J += (Y_(i) - yHati) * (Y_(i) - yHati)
+    }
+    return J;
+  }
+
+
+  /**
    * Is Initialized getter function
    */
   bool isInitialized() { return modelInitialized_; }
 
 protected:
-  // underlying model function: y(x,a)
+  // underlying model function: y(x,A)
   std::shared_ptr<ModelFunctor> mModelFunctor;
 
-  // underlying model Jacobian function: dy(x,a)/dx
-  std::shared_ptr<ModelJacobian> mJacobianFunctor;
-
-  // Vector of model weights [a1, a2, ..., ap]
+  // Vector of model weights [a1, a2, ..., an]
   Eigen::VectorXd A_;
 
-  // Matrix of independent variables (nxm matrix) with each row corresponding to
-  // a sample and each column corresponding to [x1, ..., xm])
-  Eigen::MatrixXd X_;
+  // Vector of independent variables [x1, x2, ..., xm]
+  Eigen::VectorXd X_;
 
-  // Vector of dependent variables [y1, ..., yn]
+  // Vector of dependent variables [y1, ..., ym]
   Eigen::VectorXd Y_;
 
   // Solver Options

@@ -11,11 +11,8 @@
 #include <iostream>
 
 int main() {
-  // Create a functor for the example 1 problem and the Jacobian
+  // Create a functor for the example 1 problem
   std::shared_ptr<ModelFunctor> modelPtr = std::make_shared<Example1Functor>();
-  std::shared_ptr<ModelJacobian> jacobianPtr =
-      std::make_shared<Example1Jacobian>();
-  std::make_shared<Example1Jacobian>();
 
   // Define the truth model parameters
   Eigen::Vector3d ATruth{3.0, 2.0, 1.0};
@@ -26,11 +23,9 @@ int main() {
   int numPoints = 100;
   Eigen::VectorXd X(numPoints);
   Eigen::VectorXd Y(numPoints);
-  for (int i = 0; i < numPoints; i++) {
-    Eigen::VectorXd xCurr(1);
-    xCurr(0) = start + i * (end - start) / (numPoints - 1); 
-    X(i) = xCurr(0);
-    Y(i) = (*modelPtr)(ATruth, xCurr) + 0.0; // TODO: Add noise
+  for (int i = 0; i < numPoints; i++) { 
+    X(i) = start + i * (end - start) / (numPoints - 1);
+    Y(i) = (*modelPtr)(ATruth, X(i)) + 0.0; // TODO: Add noise
   }
 
   // Initialize model parameter guesses
@@ -40,7 +35,7 @@ int main() {
   SolverOpts opts;
 
   // Create a Gradient Descent Nonlinear Optimizer
-  GradientDescent gd(modelPtr, jacobianPtr, A, X, Y, opts);
+  GradientDescent gd(modelPtr, A, X, Y, opts);
   if (gd.isInitialized()) {
     std::cout << "Gradient Descent Model Successfully Initialized!"
               << std::endl;

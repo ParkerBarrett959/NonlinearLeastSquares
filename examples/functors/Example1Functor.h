@@ -16,17 +16,12 @@ public:
    * Functor operator
    *
    * @param a A vector containing the model parameters that are being solved for
-   * @param x A vector containing the current independent variables to evaluate
+   * @param x A double representing the current independent variables to evaluate
    * the model at
    * @return A double representing the model output value
    */
-  double operator()(const Eigen::VectorXd &a, const Eigen::VectorXd &x) override {
-    // Assertions - Use these to prevent errors due to passing incorrectly sized values
-    assert(a.size() == 3);
-    assert(x.size() == 1);
-
-    // Evaluate function
-    return (a(0)*x(0) + a(1)*x(0)*x(0) + a(2)*x(0)*x(0)*x(0));
+  double operator()(const Eigen::VectorXd &a, const double x) override {
+    return (a(0)*x + a(1)*x*x + a(2)*x*x*x);
   }
 };
 #endif // EXAMPLE_1_FUNCTOR_H

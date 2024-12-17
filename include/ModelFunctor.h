@@ -17,16 +17,15 @@ public:
    * Functor operator
    *
    * @brief: This function is overriden in the inherited class and implements
-   * the model. Note: If the incorrect sized a or x vectors are passed, the
-   * model may throw an exception at runtime.
+   * the model. Note: If the incorrect sized A vector is passed, the model may throw an exception at runtime.
    *
-   * @param a A vector containing the model parameters that are being solved for
-   * @param x A vector containing the current independent variables to evaluate
+   * @param A A vector containing the model parameters that are being solved for
+   * @param x A double representing the current independent variables to evaluate
    * the model at
-   * @return A double representing the model output value
+   * @return A double representing the model dependent variable, y
    */
-  virtual double operator()(const Eigen::VectorXd &a,
-                            const Eigen::VectorXd &x) = 0;
+  virtual double operator()(const Eigen::VectorXd &A,
+                            const double x) = 0;
 };
 
 #endif // MODEL_FUNCTOR_H
