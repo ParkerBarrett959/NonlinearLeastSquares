@@ -44,6 +44,9 @@ public:
       // Increment the iteration count
       iter += 1;
 
+      // Compute the current cost
+      double J = computeJ();
+
       // Compute the Jacobian of the Cost Function
       Eigen::VectorXd dJdA = computeGradientJ();
 
@@ -55,6 +58,7 @@ public:
 
       // Print Current Iteration
       std::cout << "Iter = " << iter << std::endl;
+      std::cout << "    Cost = " << J << std::endl;
       std::cout << "    Parameters = " << A_.transpose() << std::endl;
       std::cout << "    Step Size = " << hgd.norm() << std::endl;
 

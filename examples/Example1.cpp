@@ -14,7 +14,8 @@ int main() {
   std::shared_ptr<ModelFunctor> modelPtr = std::make_shared<Example1Functor>();
 
   // Define the truth model parameters
-  Eigen::Vector3d ATruth{3.0, 2.0, 1.0};
+  Eigen::VectorXd ATruth(4);
+  ATruth << 20.0, -24.0, 30.0, -40.0;
 
   // Generate simulated data
   double start = 0.0;
@@ -28,7 +29,7 @@ int main() {
   }
 
   // Initialize model parameter guesses
-  Eigen::Vector3d A = Eigen::Vector3d::Zero();
+  Eigen::VectorXd A = Eigen::VectorXd::Zero(4);
 
   // Use the default solver options
   SolverOpts opts;

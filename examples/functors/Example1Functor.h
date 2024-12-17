@@ -21,7 +21,8 @@ public:
    * @return A double representing the model output value
    */
   double operator()(const Eigen::VectorXd &a, const double x) override {
-    return (a(0) * x + a(1) * x * x + a(2) * x * x * x);
+    double x10 = x / 10.0;
+    return (a(0) * x10 + a(1) * (x10*x10) + a(2) * (x10*x10*x10) + a(3) * (x10*x10*x10*x10));
   }
 
   /**
@@ -33,7 +34,9 @@ public:
    * @return A vector representing the gradient of the model wrt the parameters
    */
   Eigen::VectorXd gradient(const Eigen::VectorXd &a, const double x) override {
-    Eigen::Vector3d dyda{x, x * x, x * x * x};
+    double x10 = x / 10.0;
+    Eigen::VectorXd dyda(a.size());
+    dyda << x10, x10*x10, x10*x10*x10, x10*x10*x10*x10;
     return dyda;
   }
 };
