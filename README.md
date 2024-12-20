@@ -1,5 +1,5 @@
 # Nonlinear Least Squares Solver
-A small C++ header-only library and example executables for solving single-input single-output nonlinear least squares problems. The library includes support for Gradient Descent, Gauss-Newton and Levenberg-Marquardt solver and a simple interface for defining and solving your own nonlinear functions.
+A small C++ header-only library and example executables for solving single-input single-output nonlinear least squares problems. The library includes support for Gradient Descent, Gauss-Newton and Levenberg-Marquardt solvers and a simple interface for defining and solving your own nonlinear functions.
 
 # Dependencies
 * C++ 11 (or greater) <br />
@@ -18,6 +18,36 @@ To modify the solver options and parameters, modify ```include/SolverOpts.h```. 
 # Run example 1
 ./example1
 ```
+# Nonlinear Least Squares Problem Formulation
+
+Consider a single-input, single-output system of the form $\hat{y}(x,\mathbf{a})$, where x is a scalar independent variable, $\mathbf{a}$ is a vector of n unknown model parameters, $\mathbf{a} = [a_1, a_2, ..., a_n]$, and y is the scalar, dependent variable output. Given a set of m data points, $\mathbf{y} = [y_1, y_2, ..., y_m]$, the nonlinear least squares problem is to find the optimal set of parameters, $\mathbf{a}$, which minimize the sum of the squares of the residuals between the the data points and the model. The cost function is given by
+
+$$
+J = \sum_{i=1}^m [y_i - \hat{y}(x_i, \mathbf{a})]^2
+$$
+
+If the function, $\hat{y}(x, \mathbf{a})$ is linear with respect to the model coefficients $\mathbf{a}$, the cost function can be minimized in a single step using a linear least squares technique. Thise codebase focuses on solving systems which are nonlinear in the model parameters, therefore iterative methods are needed. In general, iterative methods involve finding perturbations, $\Delta{\mathbf{a}} = \mathbf{h}$, to the model parameters, which take the parameters closer and closer to the optimal values. A standard step in the algorithm takes the form
+
+$$
+a_{i+1} = a_{i} + \Delta{\mathbf{a}} = a_{i} + \mathbf{h}
+$$
+
+The three solvers implemented in this codebase, each of which are used to determine the model parameter perturbations, are Gradient Descent, the Gauss-Newton Method and the Levenberg-Marquardt Method. Details of each of these algorithms can be found in the sections to follow.
+
+One last note of importance relates to the gradient of the cost function, a term used frequently by each algorithm. The gradient is a multivariate derivative which represents the direction of steepest descent of the cost function at a given point. Using the chain rule, the gradient of the cost function can be found by taking the gradient of $J$ with respect to the model parameters, $\mathbf{a}$.
+
+$$
+\frac{\partial{J}}{\partial{\mathbf{a}}} = -2 \sum_{i=1}^m [y_i - \hat{y}(x_i, \mathbf{a})](\frac{\partial{y(x_i, \mathbf{a})}}{\partial{\mathbf{a}}})
+$$
+
+This expression holds for all problems with of the form and with the cost functions described above. Notice how the final term involves taking the partial derivative of the model with respect to the parameters. This will change for each different nonlinear model and must be computed, theoretically or numerically.
+
+# Gradient Descent Algorithm
+Insert
+# Gauss-Newton Algorithm
+TODO
+# Levenberg-Marquardt Algorithm
+TODO
 # Solving Custom Nonlinear Least Squares Problems
 
 This library provides a convenient mechanism for defining and solving your own least squares problems. You will need to create your own nonlinear function and setup an executable to run the solver. To create the nonlinear function, create a new file in the ```examples/functors/``` directory. This functor inherits from the base model functor class and must implement the () operator and gradient function. Use the following code as a template:
@@ -132,14 +162,5 @@ Finally, rebuild and the new executable, ```CustomProblem``` should be generated
 ```
 ./CustomProblem
 ```
-
-# Nonlinear Least Squares Problem Formulation
-Insert
-# Gradient Descent Algorithm
-Insert
-# Gauss-Newton Algorithm
-TODO
-# Levenberg-Marquardt Algorithm
-TODO
 # Sources
-Insert
+Gavin, H. P. (2024, May 5). The Levenberg-Marquardt algorithm for nonlinear least squares curve-fitting problems.
