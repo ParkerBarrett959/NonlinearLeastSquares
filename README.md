@@ -34,7 +34,7 @@ $$
 
 The three solvers implemented in this codebase, each of which are used to determine the model parameter perturbations, are Gradient Descent, the Gauss-Newton Method and the Levenberg-Marquardt Method. Details of each of these algorithms can be found in the sections to follow.
 
-One last note of importance relates to the gradient of the cost function, a term used frequently by each algorithm. The gradient is a multivariate derivative which represents the direction of steepest descent of the cost function at a given point. Using the chain rule, the gradient of the cost function can be found by taking the gradient of $J$ with respect to the model parameters, $\mathbf{a}$.
+One last note of importance relates to the gradient of the cost function, a term used frequently by each algorithm. The gradient is a multivariate derivative which represents the direction and magnitude of the rate of change of cost function at a given point. Using the chain rule, the gradient of the cost function can be found by taking the gradient of $J$ with respect to the model parameters, $\mathbf{a}$.
 
 $$
 \frac{\partial{J}}{\partial{\mathbf{a}}} = -2 \sum_{i=1}^m [y_i - \hat{y}(x_i, \mathbf{a})](\frac{\partial{y(x_i, \mathbf{a})}}{\partial{\mathbf{a}}})
