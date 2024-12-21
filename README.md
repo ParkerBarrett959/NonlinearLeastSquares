@@ -1,5 +1,5 @@
 # Nonlinear Least Squares Solver
-A small C++ header-only library and example executables for solving single-input single-output nonlinear least squares problems. The library includes support for Gradient Descent, Gauss-Newton and Levenberg-Marquardt solvers and a simple interface for defining and solving your own nonlinear functions.
+A small C++ header-only library and example executables for solving single-input single-output nonlinear least squares problems. The library includes support for Gradient Descent, Gauss-Newton and Levenberg-Marquardt solvers and a simple interface for defining and solving custom nonlinear functions.
 
 # Dependencies
 * C++ 11 (or greater) <br />
@@ -13,20 +13,20 @@ cmake ..
 make
 ```
 # Run Examples
-To modify the solver options and parameters, modify ```include/SolverOpts.h```. After building, run the examples with
+After building, run the examples with
 ```
 # Run example 1
 ./example1
 ```
 # Nonlinear Least Squares Problem Formulation
 
-Consider a single-input, single-output system of the form $\hat{y}(x,\mathbf{a})$, where x is a scalar independent variable, $\mathbf{a}$ is a vector of n unknown model parameters, $\mathbf{a} = [a_1, a_2, ..., a_n]$, and y is the scalar, dependent variable output. Given a set of m data points, $\mathbf{y} = [y_1, y_2, ..., y_m]$, the nonlinear least squares problem is to find the optimal set of parameters, $\mathbf{a}$, which minimize the sum of the squares of the residuals between the the data points and the model. The cost function is given by
+Consider a single-input, single-output system of the form $\hat{y}(x,\mathbf{a})$, where x is a scalar independent variable, $\mathbf{a}$ is a vector of n unknown model parameters, $\mathbf{a} = [a_1, a_2, ..., a_n]$, and y is the scalar, dependent variable output. Given a set of m data points, $\mathbf{y} = [y_1, y_2, ..., y_m]$, the nonlinear least squares problem is to find the optimal set of parameters, $\mathbf{a}$, which minimize the sum of the squares of the residuals between the data points and the model. The cost function is given by
 
 $$
 J = \sum_{i=1}^m [y_i - \hat{y}(x_i, \mathbf{a})]^2
 $$
 
-If the function, $\hat{y}(x, \mathbf{a})$ is linear with respect to the model coefficients $\mathbf{a}$, the cost function can be minimized in a single step using a linear least squares technique. Thise codebase focuses on solving systems which are nonlinear in the model parameters, therefore iterative methods are needed. In general, iterative methods involve finding perturbations, $\Delta{\mathbf{a}} = \mathbf{h}$, to the model parameters, which take the parameters closer and closer to the optimal values. A standard step in the algorithm takes the form
+If the function, $\hat{y}(x, \mathbf{a})$ is linear with respect to the model coefficients $\mathbf{a}$, the cost function can be minimized in a single step using a linear least squares technique. This codebase focuses on solving systems which are nonlinear in the model parameters, therefore iterative methods are required. In general, iterative methods involve finding perturbations, $\Delta{\mathbf{a}} = \mathbf{h}$, to the model parameters, which take the parameters closer and closer to the optimal values. A standard step in the algorithm takes the form
 
 $$
 a_{i+1} = a_{i} + \Delta{\mathbf{a}} = a_{i} + \mathbf{h}
@@ -40,10 +40,22 @@ $$
 \frac{\partial{J}}{\partial{\mathbf{a}}} = -2 \sum_{i=1}^m [y_i - \hat{y}(x_i, \mathbf{a})](\frac{\partial{y(x_i, \mathbf{a})}}{\partial{\mathbf{a}}})
 $$
 
-This expression holds for all problems with of the form and with the cost functions described above. Notice how the final term involves taking the partial derivative of the model with respect to the parameters. This will change for each different nonlinear model and must be computed, theoretically or numerically.
+This expression is relevant for all problems which have the least squares cost function described above. Notice how the final term involves taking the partial derivative of the nonlinear model with respect to the parameters. This will be different for each unique model and must be computed, theoretically or numerically. In this codebase, the model functors expect the gradients to be provided along with the base model.
 
 # Gradient Descent Algorithm
-Insert
+
+The Gradient Descent algorithm is conceptually straightforward. If the gradient of the cost function with respect to the model parameters, $\frac{\partial{J}}{\partial{\mathbf{a}}}$, represents the sensitivity of the cost to changes in the parameters, then we can compute the gradient at each step, find the direction of steepest descent (minimizing the cost function), and continually step in that direction until the cost can not shrink any further.
+
+In particular, the Gradient Descent perturbation is given by
+
+$$
+h_{GD} = -\alpha \frac{\partial{J}}{\partial{\mathbf{a}}}\Bigr|_{\mathbf{a}}
+$$
+
+In the expression above, $\alpha$ represents the step size, commonly referred to as the learning rate, and the gradient expression is evaluated at the current model parameter values. The learning rate is typically set to some value less than 1 (0.1 for example), which allows the algorithm to converge.
+
+While Gradient Descent is extremely powerful, it is not always guaranteed to converge to the optimal (or any) solution. If the cost function is non-convex for example, Gradient Descent may converge to a local optimum, but miss a global optimum, or fail to converge entirely. The algorithm tends to perform best further away from the optimal solution with relatively steep gradients, and worst in shallower section of the cost function. This leads to relatively quick convergence when you are farther away from the solution, but the slower convergence near the optimal solution.
+
 # Gauss-Newton Algorithm
 TODO
 # Levenberg-Marquardt Algorithm
