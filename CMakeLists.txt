@@ -14,6 +14,7 @@ find_package(Eigen3 REQUIRED)
 set(HEADER_LIST ${PROJECT_SOURCE_DIR}/include/NonlinearOptimizer.h
                 ${PROJECT_SOURCE_DIR}/include/ModelFunctor.h
                 ${PROJECT_SOURCE_DIR}/include/GradientDescent.h
+                ${PROJECT_SOURCE_DIR}/include/GaussNewton.h
                 ${PROJECT_SOURCE_DIR}/include/SolverOpts.h)
 
 # Add Library

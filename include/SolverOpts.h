@@ -9,7 +9,7 @@
  */
 struct SolverOpts {
   // General Options
-  int max_iter = 1000;                  // max number of iterations
+  int max_iter = 1000;                 // max number of iterations
   double convergence_criterion = 0.01; // convergence criterion
 
   // Gradient Descent options

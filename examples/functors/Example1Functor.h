@@ -22,7 +22,8 @@ public:
    */
   double operator()(const Eigen::VectorXd &a, const double x) override {
     double x10 = x / 10.0;
-    return (a(0) * x10 + a(1) * (x10*x10) + a(2) * (x10*x10*x10) + a(3) * (x10*x10*x10*x10));
+    return (a(0) * x10 + a(1) * (x10 * x10) + a(2) * (x10 * x10 * x10) +
+            a(3) * (x10 * x10 * x10 * x10));
   }
 
   /**
@@ -36,7 +37,7 @@ public:
   Eigen::VectorXd gradient(const Eigen::VectorXd &a, const double x) override {
     double x10 = x / 10.0;
     Eigen::VectorXd dyda(a.size());
-    dyda << x10, x10*x10, x10*x10*x10, x10*x10*x10*x10;
+    dyda << x10, x10 * x10, x10 * x10 * x10, x10 * x10 * x10 * x10;
     return dyda;
   }
 };

@@ -4,6 +4,7 @@
  * Problem statement: Example 1 contained in this executable is a simple test
  * of the nonlinear least squares solver(s) on a linear objective function.
  */
+#include "GaussNewton.h"
 #include "GradientDescent.h"
 #include "SolverOpts.h"
 #include "functors/Example1Functor.h"
@@ -42,8 +43,15 @@ int main() {
               << std::endl;
   }
 
-  // Run optimization
-  bool success = gd.optimize();
+  // Create a Gauss-Newton Nonlinear Optimizer
+  GaussNewton gn(modelPtr, A, X, Y, opts);
+  if (gn.isInitialized()) {
+    std::cout << "Gauss-Newton Model Successfully Initialized!" << std::endl;
+  }
+
+  // Run optimizations
+  bool successGD = gd.optimize();
+  bool successGN = gn.optimize();
 
   return 0;
 }
