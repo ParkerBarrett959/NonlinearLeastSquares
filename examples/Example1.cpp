@@ -66,33 +66,33 @@ int main() {
   bool successGN = gn.optimize();
 
   // Get model parameters and print results
-  Eigen::VectorXd aGD = gd.getModelParameters();
-  Eigen::VectorXd aGN = gn.getModelParameters();
-  int numberStepsGD = gd.getNumberSteps();
-  int numberStepsGN = gn.getNumberSteps();
-  bool convergedGD = gd.optimizationConverged();
-  bool convergedGN = gn.optimizationConverged();
   std::cout << "\n--------------------------------------------\n" << std::endl;
   std::cout << "Truth Parameters: " << ATruth.transpose() << std::endl;
   std::cout << "Gradient Descent:" << std::endl;
-  if (convergedGD) {
+  if (gd.optimizationConverged()) {
     std::cout << "    Converged: True" << std::endl;
   } else {
     std::cout << "    Converged: False" << std::endl;
   }
-  std::cout << "    Number of Steps Run: " << numberStepsGD << std::endl;
-  std::cout << "    Final Parameters = " << aGD.transpose() << std::endl;
-  std::cout << "    Error = " << (aGD - ATruth).transpose() << std::endl;
-  std::cout << "    Error Magnitude = " << (aGD - ATruth).norm() << std::endl;
+  std::cout << "    Number of Steps Run: " << gd.getNumberSteps() << std::endl;
+  std::cout << "    Final Parameters = " << gd.getModelParameters().transpose()
+            << std::endl;
+  std::cout << "    Error = " << (gd.getModelParameters() - ATruth).transpose()
+            << std::endl;
+  std::cout << "    Error Magnitude = "
+            << (gd.getModelParameters() - ATruth).norm() << std::endl;
   std::cout << "\nGauss Newton:" << std::endl;
-  if (convergedGN) {
+  if (gn.optimizationConverged()) {
     std::cout << "    Converged: True" << std::endl;
   } else {
     std::cout << "    Converged: False" << std::endl;
   }
-  std::cout << "    Number of Steps Run: " << numberStepsGN << std::endl;
-  std::cout << "    Final Parameters = " << aGN.transpose() << std::endl;
-  std::cout << "    Error = " << (aGN - ATruth).transpose() << std::endl;
-  std::cout << "    Error Magnitude = " << (aGN - ATruth).norm() << std::endl;
+  std::cout << "    Number of Steps Run: " << gn.getNumberSteps() << std::endl;
+  std::cout << "    Final Parameters = " << gn.getModelParameters().transpose()
+            << std::endl;
+  std::cout << "    Error = " << (gn.getModelParameters() - ATruth).transpose()
+            << std::endl;
+  std::cout << "    Error Magnitude = "
+            << (gn.getModelParameters() - ATruth).norm() << std::endl;
   return 0;
 }
