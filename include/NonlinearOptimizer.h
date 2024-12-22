@@ -41,7 +41,7 @@ public:
     double J = 0.0;
     for (int i = 0; i < Y_.size(); i++) {
       double yHati = (*mModelFunctor)(A_, X_(i));
-      J += (Y_(i) - yHati) * (Y_(i) - yHati);
+      J += 0.5 * (Y_(i) - yHati) * (Y_(i) - yHati);
     }
     return J;
   }
@@ -56,7 +56,7 @@ public:
     for (int i = 0; i < Y_.size(); i++) {
       double yHati = (*mModelFunctor)(A_, X_(i));
       Eigen::VectorXd dyidA = (*mModelFunctor).gradient(A_, X_(i));
-      dJdA -= 2.0 * (Y_(i) - yHati) * dyidA;
+      dJdA -= (Y_(i) - yHati) * dyidA;
     }
     return dJdA;
   }
