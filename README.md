@@ -23,7 +23,7 @@ After building, run the examples with
 Consider a single-input, single-output system of the form $\hat{y}(x,\mathbf{a})$, where x is a scalar independent variable, $\mathbf{a}$ is a vector of n unknown model parameters, $\mathbf{a} = [a_1, a_2, ..., a_n]$, and y is the scalar, dependent variable output. Given a set of m data points, $\mathbf{y} = [y_1, y_2, ..., y_m]$, the nonlinear least squares problem is to find the optimal set of parameters, $\mathbf{a}$, which minimize the sum of the squares of the residuals between the data points and the model. The cost function is given by
 
 $$
-J = \sum_{i=1}^m [y_i - \hat{y}(x_i, \mathbf{a})]^2
+J = \frac{1}{2} \sum_{i=1}^m [y_i - \hat{y}(x_i, \mathbf{a})]^2
 $$
 
 If the function, $\hat{y}(x, \mathbf{a})$ is linear with respect to the model coefficients $\mathbf{a}$, the cost function can be minimized in a single step using a linear least squares technique. This codebase focuses on solving systems which are nonlinear in the model parameters, therefore iterative methods are required. In general, iterative methods involve finding perturbations, $\Delta{\mathbf{a}} = \mathbf{h}$, to the model parameters, which take the parameters closer and closer to the optimal values. A standard step in the algorithm takes the form
@@ -37,7 +37,7 @@ The three solvers implemented in this codebase, each of which are used to determ
 One last note of importance relates to the gradient of the cost function, a term used frequently by each algorithm. The gradient is a multivariate derivative which represents the direction and magnitude of the rate of change of cost function at a given point. Using the chain rule, the gradient of the cost function can be found by taking the gradient of $J$ with respect to the model parameters, $\mathbf{a}$.
 
 $$
-\frac{\partial{J}}{\partial{\mathbf{a}}} = -2 \sum_{i=1}^m [y_i - \hat{y}(x_i, \mathbf{a})](\frac{\partial{y(x_i, \mathbf{a})}}{\partial{\mathbf{a}}})
+\frac{\partial{J}}{\partial{\mathbf{a}}} = - \sum_{i=1}^m [y_i - \hat{y}(x_i, \mathbf{a})](\frac{\partial{y(x_i, \mathbf{a})}}{\partial{\mathbf{a}}})
 $$
 
 This expression is relevant for all problems which have the least squares cost function described above. Notice how the final term involves taking the partial derivative of the nonlinear model with respect to the parameters. This will be different for each unique model and must be computed, theoretically or numerically. In this codebase, the model functors expect the gradients to be provided along with the base model.
@@ -49,7 +49,7 @@ The Gradient Descent algorithm is conceptually straightforward. If the gradient 
 In particular, the Gradient Descent perturbation is given by
 
 $$
-h_{GD} = -\alpha \frac{\partial{J}}{\partial{\mathbf{a}}}\Bigr|_{\mathbf{a}}
+h_{GD} = \alpha \frac{\partial{J}}{\partial{\mathbf{a}}}\Bigr|_{\mathbf{a}}
 $$
 
 In the expression above, $\alpha$ represents the step size, commonly referred to as the learning rate, and the gradient expression is evaluated at the current model parameter values. The learning rate is typically set to some value less than 1 (0.1 for example), which allows the algorithm to converge.
