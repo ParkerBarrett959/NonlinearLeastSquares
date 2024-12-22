@@ -29,7 +29,7 @@ $$
 If the function, $\hat{y}(x, \mathbf{a})$ is linear with respect to the model coefficients $\mathbf{a}$, the cost function can be minimized in a single step using a linear least squares technique. This codebase focuses on solving systems which are nonlinear in the model parameters, therefore iterative methods are required. In general, iterative methods involve finding perturbations, $\Delta{\mathbf{a}} = \mathbf{h}$, to the model parameters, which take the parameters closer and closer to the optimal values. A standard step in the algorithm takes the form
 
 $$
-a_{i+1} = a_{i} + \Delta{\mathbf{a}} = a_{i} + \mathbf{h}
+a_{i+1} = a_{i} - \Delta{\mathbf{a}} = a_{i} - \mathbf{h}
 $$
 
 The three solvers implemented in this codebase, each of which are used to determine the model parameter perturbations, are Gradient Descent, the Gauss-Newton Method and the Levenberg-Marquardt Method. Details of each of these algorithms can be found in the sections to follow.
@@ -57,7 +57,33 @@ In the expression above, $\alpha$ represents the step size, commonly referred to
 While Gradient Descent is extremely powerful, it is not always guaranteed to converge to the optimal (or any) solution. If the cost function is non-convex for example, Gradient Descent may converge to a local optimum, but miss a global optimum, or fail to converge entirely. The algorithm tends to perform best further away from the optimal solution with relatively steep gradients, and worst in shallower section of the cost function. This leads to relatively quick convergence when you are farther away from the solution, but the slower convergence near the optimal solution.
 
 # Gauss-Newton Algorithm
-TODO
+
+The Gauss-Newton is a modification of the widely used Newton-Raphson root-finding technique, in which an analytical expression for the Hessian is required. The Newton-Raphson method is given by
+
+$$
+a_{i+1} = a_{i} - \Delta{\mathbf{a}} = a_{i} - (\mathbf{H})^{-1} \frac{\partial{J}}{\partial{\mathbf{a}}}\Bigr|_{\mathbf{a}}
+$$
+
+In many nonlinear least squares problems, an exact expression for the Hessian can not be provided, or is too numerically expensive to compute. In the Gauss-Newton method, a first-order approximation of the Hessian is made as
+
+$$
+\mathbf{H} \approx Y^{T}Y
+$$
+
+where
+
+$$
+Y = \frac{\partial{y(x_i, \mathbf{a})}}{\partial{\mathbf{a}}}\Bigr|_{\mathbf{a}}
+$$
+
+The final Gauss-Newton perturbation then becomes
+
+$$
+h_{GN} = (Y^{T}Y)^{-1} \frac{\partial{J}}{\partial{\mathbf{a}}}\Bigr|_{\mathbf{a}}
+$$
+
+Notice the similarities to the perturbation expression from the Gradient Descent solver. The inverse of the Hessian can be thought of as a better estimate of the learning rate, $\alpha$. The Gauss-Newton method typically performs better than Gradient Descent, without the need for parameter tuning, in particular in "shallow" sections of the optimization problem near the solution.
+
 # Levenberg-Marquardt Algorithm
 TODO
 # Solving Custom Nonlinear Least Squares Problems
