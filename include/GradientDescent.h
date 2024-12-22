@@ -34,15 +34,12 @@ public:
    */
   bool optimize() {
     // Initial print statement
-    std::cout << "Gradient Descent optimization" << std::endl;
-    std::cout << "------------------------------------------------"
-              << std::endl;
+    std::cout << "Running Gradient Descent optimization..." << std::endl;
+
     // Loop until convergence
-    bool converged = false;
-    int iter = 0;
-    while (!converged && iter < opts_.max_iter) {
+    while (!optimizerConverged_ && numberSteps_ < opts_.max_iter) {
       // Increment the iteration count
-      iter += 1;
+      numberSteps_ += 1;
 
       // Compute the current cost
       double J = computeJ();
@@ -56,18 +53,25 @@ public:
       // Update the model parameters
       A_ = A_ - hgd;
 
-      // Print Current Iteration
-      std::cout << "Iter = " << iter << std::endl;
-      std::cout << "    Cost = " << J << std::endl;
-      std::cout << "    Parameters = " << A_.transpose() << std::endl;
-      std::cout << "    Step Size = " << hgd.norm() << std::endl;
-
-      // Check for convergence
+      // Check for convergence and print step
       if (hgd.norm() < opts_.convergence_criterion) {
-        std::cout << "Gradient descent converged!" << std::endl;
-        converged = true;
+        if (opts_.print_steps) {
+          std::cout << "Gradient Descent converged!" << std::endl;
+          std::cout << "Number of Iterations: " << numberSteps_ << std::endl;
+          std::cout << "Cost: " << J << std::endl;
+          std::cout << "Final Step Size: " << hgd.norm() << std::endl;
+          std::cout << "Final Model Parameters: " << A_.transpose()
+                    << std::endl;
+        }
+        optimizerConverged_ = true;
+      } else {
+        if (opts_.print_steps) {
+          std::cout << "    i = " << numberSteps_ << ", J = " << J
+                    << ", step = " << hgd.norm() << std::endl;
+        }
       }
     }
+    std::cout << "Gradient Descent Complete!" << std::endl;
     return true;
   }
 };

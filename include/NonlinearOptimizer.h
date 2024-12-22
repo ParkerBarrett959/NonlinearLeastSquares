@@ -24,6 +24,7 @@ public:
     // Verify X and Y dimensions are correct
     if (X_.size() == Y_.size()) {
       modelInitialized_ = true;
+      numberSteps_ = 0;
     }
   }
 
@@ -66,6 +67,21 @@ public:
    */
   bool isInitialized() { return modelInitialized_; }
 
+  /**
+   * A getter function to check if the optimization converged
+   */
+  bool optimizationConverged() { return optimizerConverged_; }
+
+  /**
+   * Number of steps run by the optimizer getter function
+   */
+  bool getNumberSteps() { return numberSteps_; }
+
+  /**
+   * Model parameter getter function
+   */
+  Eigen::VectorXd getModelParameters() { return A_; }
+
 protected:
   // underlying model function: y(x,A)
   std::shared_ptr<ModelFunctor> mModelFunctor;
@@ -84,6 +100,12 @@ protected:
 
   // Model intialized flag
   bool modelInitialized_ = false;
+
+  // Optimization converged flag
+  bool optimizerConverged_ = false;
+
+  // Number of iterative steps taken
+  int numberSteps_;
 };
 
 #endif // NONLINEAR_OPTIMIZER_H

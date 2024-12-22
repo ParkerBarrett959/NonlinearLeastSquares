@@ -27,7 +27,7 @@ int main() {
   // Generate simulated data
   double start = 0.0;
   double end = 10.0;
-  int numPoints = 100;
+  int numPoints = 1000;
   Eigen::VectorXd X(numPoints);
   Eigen::VectorXd Y(numPoints);
   for (int i = 0; i < numPoints; i++) {
@@ -40,27 +40,59 @@ int main() {
   A << 11.8, -13.8, 25.0, -50.0;
 
   // Set the solver options
-  SolverOpts optsGD = {
-      .max_iter = 1000, .convergence_criterion = 1.0e-6, .alpha = 0.025};
-  SolverOpts optsGN = {
-      .max_iter = 1000, .convergence_criterion = 1.0e-6, .alpha = 1.0};
+  SolverOpts optsGD = {.max_iter = 1000,
+                       .convergence_criterion = 1.0e-3,
+                       .alpha = 0.002,
+                       .print_steps = false};
+  SolverOpts optsGN = {.max_iter = 1000,
+                       .convergence_criterion = 1.0e-6,
+                       .alpha = 1.0,
+                       .print_steps = false};
 
   // Create a Gradient Descent Nonlinear Optimizer
   GradientDescent gd(modelPtr, A, X, Y, optsGD);
-  if (gd.isInitialized()) {
-    std::cout << "Gradient Descent Model Successfully Initialized!"
-              << std::endl;
+  if (!gd.isInitialized()) {
+    return 1;
   }
 
   // Create a Gauss-Newton Nonlinear Optimizer
   GaussNewton gn(modelPtr, A, X, Y, optsGN);
-  if (gn.isInitialized()) {
-    std::cout << "Gauss-Newton Model Successfully Initialized!" << std::endl;
+  if (!gn.isInitialized()) {
+    return 1;
   }
 
   // Run optimizations
   bool successGD = gd.optimize();
   bool successGN = gn.optimize();
 
+  // Get model parameters and print results
+  Eigen::VectorXd aGD = gd.getModelParameters();
+  Eigen::VectorXd aGN = gn.getModelParameters();
+  int numberStepsGD = gd.getNumberSteps();
+  int numberStepsGN = gn.getNumberSteps();
+  bool convergedGD = gd.optimizationConverged();
+  bool convergedGN = gn.optimizationConverged();
+  std::cout << "\n--------------------------------------------\n" << std::endl;
+  std::cout << "Truth Parameters: " << ATruth.transpose() << std::endl;
+  std::cout << "Gradient Descent:" << std::endl;
+  if (convergedGD) {
+    std::cout << "    Converged: True" << std::endl;
+  } else {
+    std::cout << "    Converged: False" << std::endl;
+  }
+  std::cout << "    Number of Steps Run: " << numberStepsGD << std::endl;
+  std::cout << "    Final Parameters = " << aGD.transpose() << std::endl;
+  std::cout << "    Error = " << (aGD - ATruth).transpose() << std::endl;
+  std::cout << "    Error Magnitude = " << (aGD - ATruth).norm() << std::endl;
+  std::cout << "\nGauss Newton:" << std::endl;
+  if (convergedGN) {
+    std::cout << "    Converged: True" << std::endl;
+  } else {
+    std::cout << "    Converged: False" << std::endl;
+  }
+  std::cout << "    Number of Steps Run: " << numberStepsGN << std::endl;
+  std::cout << "    Final Parameters = " << aGN.transpose() << std::endl;
+  std::cout << "    Error = " << (aGN - ATruth).transpose() << std::endl;
+  std::cout << "    Error Magnitude = " << (aGN - ATruth).norm() << std::endl;
   return 0;
 }

@@ -34,15 +34,12 @@ public:
    */
   bool optimize() {
     // Initial print statement
-    std::cout << "Gauss-Newton optimization" << std::endl;
-    std::cout << "------------------------------------------------"
-              << std::endl;
+    std::cout << "Running Gauss-Newton optimization..." << std::endl;
+
     // Loop until convergence
-    bool converged = false;
-    int iter = 0;
-    while (!converged && iter < opts_.max_iter) {
+    while (!optimizerConverged_ && numberSteps_ <= opts_.max_iter) {
       // Increment the iteration count
-      iter += 1;
+      numberSteps_ += 1;
 
       // Compute the current cost
       double J = computeJ();
@@ -63,18 +60,25 @@ public:
       // Update the model parameters
       A_ = A_ - hgn;
 
-      // Print Current Iteration
-      std::cout << "Iter = " << iter << std::endl;
-      std::cout << "    Cost = " << J << std::endl;
-      std::cout << "    Parameters = " << A_.transpose() << std::endl;
-      std::cout << "    Step Size = " << hgn.norm() << std::endl;
-
-      // Check for convergence
+      // Check for convergence and print step
       if (hgn.norm() < opts_.convergence_criterion) {
-        std::cout << "Gauss-Newton converged!" << std::endl;
-        converged = true;
+        if (opts_.print_steps) {
+          std::cout << "Gauss-Newton converged!" << std::endl;
+          std::cout << "Number of Iterations: " << numberSteps_ << std::endl;
+          std::cout << "Cost: " << J << std::endl;
+          std::cout << "Final Step Size: " << hgn.norm() << std::endl;
+          std::cout << "Final Model Parameters: " << A_.transpose()
+                    << std::endl;
+        }
+        optimizerConverged_ = true;
+      } else {
+        if (opts_.print_steps) {
+          std::cout << "i = " << numberSteps_ << ", J = " << J
+                    << ", step = " << hgn.norm() << std::endl;
+        }
       }
     }
+    std::cout << "Gauss-Newton Complete!" << std::endl;
     return true;
   }
 };
