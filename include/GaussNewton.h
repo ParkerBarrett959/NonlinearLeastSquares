@@ -58,7 +58,7 @@ public:
       }
 
       // Compute the Gauss-Newton step
-      Eigen::VectorXd hgn = opts_.alpha * H.inverse() * dJdA;
+      Eigen::VectorXd hgn = H.inverse() * dJdA;
 
       // Update the model parameters
       A_ = A_ - hgn;

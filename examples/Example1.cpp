@@ -9,6 +9,7 @@
 #include "SolverOpts.h"
 #include "functors/Example1Functor.h"
 #include <iostream>
+#include <random>
 
 int main() {
   // Create a functor for the example 1 problem
@@ -16,7 +17,12 @@ int main() {
 
   // Define the truth model parameters
   Eigen::VectorXd ATruth(4);
-  ATruth << 20.0, -24.0, 30.0, -40.0;
+  ATruth << 10.0, -20.0, 30.0, -40.0;
+
+  // Random number generator
+  std::random_device rd;
+  std::mt19937 gen(rd());
+  std::normal_distribution<> dist(0.0, 0.5);
 
   // Generate simulated data
   double start = 0.0;
@@ -26,25 +32,28 @@ int main() {
   Eigen::VectorXd Y(numPoints);
   for (int i = 0; i < numPoints; i++) {
     X(i) = start + i * (end - start) / (numPoints - 1);
-    Y(i) = (*modelPtr)(ATruth, X(i)) + 0.0; // TODO: Add noise
+    Y(i) = (*modelPtr)(ATruth, X(i)) + dist(gen); // TODO: Add noise
   }
 
   // Initialize model parameter guesses
   Eigen::VectorXd A(4);
-  A << 11.8, -7.8, 56.0, -20.0;
+  A << 11.8, -13.8, 25.0, -50.0;
 
-  // Use the default solver options
-  SolverOpts opts;
+  // Set the solver options
+  SolverOpts optsGD = {
+      .max_iter = 1000, .convergence_criterion = 1.0e-6, .alpha = 0.025};
+  SolverOpts optsGN = {
+      .max_iter = 1000, .convergence_criterion = 1.0e-6, .alpha = 1.0};
 
   // Create a Gradient Descent Nonlinear Optimizer
-  GradientDescent gd(modelPtr, A, X, Y, opts);
+  GradientDescent gd(modelPtr, A, X, Y, optsGD);
   if (gd.isInitialized()) {
     std::cout << "Gradient Descent Model Successfully Initialized!"
               << std::endl;
   }
 
   // Create a Gauss-Newton Nonlinear Optimizer
-  GaussNewton gn(modelPtr, A, X, Y, opts);
+  GaussNewton gn(modelPtr, A, X, Y, optsGN);
   if (gn.isInitialized()) {
     std::cout << "Gauss-Newton Model Successfully Initialized!" << std::endl;
   }
