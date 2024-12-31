@@ -67,7 +67,7 @@ $$
 In many nonlinear least squares problems, an exact expression for the Hessian can not be provided, or is too numerically expensive to compute. In the Gauss-Newton method, a first-order approximation of the Hessian is made as
 
 $$
-\mathbf{H} \approx Y^{T}Y
+\mathbf{H_{\textrm{approx}}} \approx \sum_{i=1}^m Y^{T}Y
 $$
 
 where
@@ -79,7 +79,7 @@ $$
 The final Gauss-Newton perturbation then becomes
 
 $$
-h_{GN} = (Y^{T}Y)^{-1} \frac{\partial{J}}{\partial{\mathbf{a}}}\Bigr|_{\mathbf{a}}
+h_{GN} = \mathbf{H_{\textrm{approx}}^{-1}} \frac{\partial{J}}{\partial{\mathbf{a}}}\Bigr|_{\mathbf{a}}
 $$
 
 Notice the similarities to the perturbation expression from the Gradient Descent solver. The inverse of the Hessian can be thought of as a better estimate of the learning rate, $\alpha$. The Gauss-Newton method typically performs better than Gradient Descent, without the need for parameter tuning, in particular in "shallow" sections of the optimization problem near the solution.
