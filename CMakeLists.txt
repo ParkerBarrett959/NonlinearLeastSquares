@@ -25,14 +25,23 @@ target_include_directories(nonlinear_least_squares INTERFACE ${PROJECT_SOURCE_DI
 ${EIGEN3_INCLUDE_DIRS} )
 
 # Add Example Header List
-set(EXAMPLE_HEADER_LIST ${PROJECT_SOURCE_DIR}/examples/functors/Example1Functor.h)
+set(EXAMPLE_HEADER_LIST ${PROJECT_SOURCE_DIR}/examples/functors/Example1Functor.h
+                        ${PROJECT_SOURCE_DIR}/examples/functors/Example2Functor.h)
 
-# Example Case Build
+# Example 1 Case Build
 add_executable( example1 ${PROJECT_SOURCE_DIR}/examples/Example1.cpp ${HEADER_LIST} ${EXAMPLE_HEADER_LIST})
 target_link_libraries(
   example1
   nonlinear_least_squares
 )
 
+# Example 2 Case Build
+add_executable( example2 ${PROJECT_SOURCE_DIR}/examples/Example2.cpp ${HEADER_LIST} ${EXAMPLE_HEADER_LIST})
+target_link_libraries(
+  example2
+  nonlinear_least_squares
+)
+
 # Target Include Directories
 target_include_directories(example1 PUBLIC ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/examples ${EIGEN_INCLUDE_DIRS})
+target_include_directories(example2 PUBLIC ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/examples ${EIGEN_INCLUDE_DIRS})
