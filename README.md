@@ -170,15 +170,20 @@ int main() {
   // Define the truth model parameters
   Eigen::VectorXd ATruth; // Set ATruth values here
 
+  // Random number generator
+  std::random_device rd;
+  std::mt19937 gen(rd());
+  std::normal_distribution<> dist(0.0, 0.5);
+
   // Generate simulated, noisy data - see below as an example
   double start = 0.0;
-  double end = 10.0;
+  double end = 100.0;
   int numPoints = 100;
   Eigen::VectorXd X(numPoints);
   Eigen::VectorXd Y(numPoints);
   for (int i = 0; i < numPoints; i++) {
     X(i) = start + i * (end - start) / (numPoints - 1);
-    Y(i) = (*modelPtr)(ATruth, X(i)) + 0.0; // Add noise here if desired
+    Y(i) = (*modelPtr)(ATruth, X(i)) + dist(gen);
   }
 
   // Initialize model parameter guesses
@@ -197,6 +202,22 @@ int main() {
   // Run optimization
   bool success = gd.optimize();
 
+  // Get model parameters and print results
+  std::cout << "\n--------------------------------------------\n" << std::endl;
+  std::cout << "Truth Parameters: " << ATruth.transpose() << std::endl;
+  std::cout << "Gradient Descent:" << std::endl;
+  if (gd.optimizationConverged()) {
+    std::cout << "    Converged: True" << std::endl;
+  } else {
+    std::cout << "    Converged: False" << std::endl;
+  }
+  std::cout << "    Number of Steps Run: " << gd.getNumberSteps() << std::endl;
+  std::cout << "    Final Parameters = " << gd.getModelParameters().transpose()
+            << std::endl;
+  std::cout << "    Error = " << (gd.getModelParameters() - ATruth).transpose()
+            << std::endl;
+  std::cout << "    Error Magnitude = "
+            << (gd.getModelParameters() - ATruth).norm() << std::endl;
   return 0;
 }
 ```
