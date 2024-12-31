@@ -17,6 +17,9 @@ After building, run the examples with
 ```
 # Run example 1
 ./example1
+
+# Run Example 2
+./example2
 ```
 # Nonlinear Least Squares Problem Formulation
 
@@ -85,7 +88,25 @@ $$
 Notice the similarities to the perturbation expression from the Gradient Descent solver. The inverse of the Hessian can be thought of as a better estimate of the learning rate, $\alpha$. The Gauss-Newton method typically performs better than Gradient Descent, without the need for parameter tuning, in particular in "shallow" sections of the optimization problem near the solution.
 
 # Levenberg-Marquardt Algorithm
-TODO
+
+The Levenberg-Marquardt algorithm can be thought of as a combination of Gradient Descent and Gauss-Newton, taking the strengths of each. While many formulations of Levenberg-Marquardt exist, the version used in this codebase uses the following perturbation:
+
+$$
+h_{LM} = \mathbf{(H_{\textrm{approx}}+ \lambda \mathbb{I})^{-1}} \frac{\partial{J}}{\partial{\mathbf{a}}}\Bigr|_{\mathbf{a}}
+$$
+
+Notice the similarity to the Gauss-Newton perturbation. In particular, as $\lambda$ trends towards zero, $h_{LM} = h_{GN}$. Conversely, as $\lambda$ increases, the magnitude of the resulting matrix inversion shrinks, which has the effect of shortening the step size in the same manner as the learning rate, $\alpha$, in the Gradient Descent algorithm. Since changing the value of $\lambda$ can shift our algorithm to behave like Gauss-Newton or Gradient Descent, it seems reasonable that we could set the parameter in such a way to maximize the strengths of each.
+
+In practice, $\lambda$, is initialized to some value, $\lambda_{0}$. At each iteration, we then compute the Levenberg-Marquardt step using the expression above with $\lambda = \lambda$ and $\lambda = \frac{\lambda}{\nu}$. $\nu$ here is scaling parameter, set to some value $\nu > 1$.
+
+Next, we evaluate the cost function at each of these two possible perturbations. If neither perturbation shows improvement over the current model parameters, we simply set $\lambda = \lambda \nu$ and repeat the procedure. By increasing $\lambda$, this shifts the perturbation closer to a Gradient Descent step with a smaller learning rate.
+
+If either of the two perturbations shows improvement over the existing score, we then make a decision about which perturbation to use. If the smaller value, $\lambda = \frac{\lambda}{\nu}$ showed an improvement, we use this one and set $\lambda = \frac{\lambda}{\nu}$. By shrinking $\lambda$, we shift the problem closer towards Gauss-Newton, which typically converges faster closer to the solution.
+
+If only the larger value, $\lambda = \lambda$ demonstrated an improvement, we simply use this perturbation and continue to the next iteration without modifying $\lambda$.
+
+While Levenberg-Marquardt will not always outperform Gradient-Descent and Gauss-Newton, it does have several advantages, most notably its robustness, If the Hessian matrix is poorly conditioned, Gauss-Newton can fail or converge slowly, which the damping coefficient in Levenberg-Marquardt helps prevent. Additionally, if the model parameters begin far from the optimal solution, Levenberg-Marquardt will shift closer to Gradient Descent, which is less aggressive and helps pull the model parameters closer to the optimum slowly, before shifting towards the more aggressive, but faster convergence of Gauss-Newton. 
+
 # Solving Custom Nonlinear Least Squares Problems
 
 This library provides a convenient mechanism for defining and solving your own least squares problems. You will need to create your own nonlinear function and setup an executable to run the solver. To create the nonlinear function, create a new file in the ```examples/functors/``` directory. This functor inherits from the base model functor class and must implement the () operator and gradient function. Use the following code as a template:
@@ -201,4 +222,5 @@ Finally, rebuild and the new executable, ```CustomProblem``` should be generated
 ./CustomProblem
 ```
 # Sources
-Gavin, H. P. (2024, May 5). The Levenberg-Marquardt algorithm for nonlinear least squares curve-fitting problems.
+- Gavin, H. P. (2024, May 5). The Levenberg-Marquardt algorithm for nonlinear least squares curve-fitting problems.
+- https://en.wikipedia.org/wiki/Levenberg%E2%80%93Marquardt_algorithm
