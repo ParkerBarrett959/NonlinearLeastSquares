@@ -6,6 +6,7 @@
  */
 #include "GaussNewton.h"
 #include "GradientDescent.h"
+#include "LevenbergMarquardt.h"
 #include "SolverOpts.h"
 #include "functors/Example1Functor.h"
 #include <iostream>
@@ -44,12 +45,20 @@ int main() {
                        .convergence_criterion = 1.0e-6,
                        .print_steps = false,
                        .alpha = 1.0e-9,
-                       .lambda0 = 1.0};
+                       .lambda0 = 1.0,
+                       .factor = 2.0};
   SolverOpts optsGN = {.max_iter = 1000,
                        .convergence_criterion = 1.0e-6,
                        .print_steps = false,
                        .alpha = 1.0,
-                       .lambda0 = 1.0};
+                       .lambda0 = 1.0,
+                       .factor = 2.0};
+  SolverOpts optsLM = {.max_iter = 1000,
+                       .convergence_criterion = 1.0e-6,
+                       .print_steps = false,
+                       .alpha = 1.0,
+                       .lambda0 = 1.0,
+                       .factor = 2.0};
 
   // Create a Gradient Descent Nonlinear Optimizer
   GradientDescent gd(modelPtr, A, X, Y, optsGD);
@@ -63,9 +72,16 @@ int main() {
     return 1;
   }
 
+  // Create a Levenberg-Marquardt Nonlinear Optimizer
+  LevenbergMarquardt lm(modelPtr, A, X, Y, optsLM);
+  if (!lm.isInitialized()) {
+    return 1;
+  }
+
   // Run optimizations
   bool successGD = gd.optimize();
   bool successGN = gn.optimize();
+  bool successLM = lm.optimize();
 
   // Get model parameters and print results
   std::cout << "\n--------------------------------------------\n" << std::endl;
@@ -96,5 +112,18 @@ int main() {
             << std::endl;
   std::cout << "    Error Magnitude = "
             << (gn.getModelParameters() - ATruth).norm() << std::endl;
+  std::cout << "\nLevenberg-Marquardt:" << std::endl;
+  if (lm.optimizationConverged()) {
+    std::cout << "    Converged: True" << std::endl;
+  } else {
+    std::cout << "    Converged: False" << std::endl;
+  }
+  std::cout << "    Number of Steps Run: " << lm.getNumberSteps() << std::endl;
+  std::cout << "    Final Parameters = " << lm.getModelParameters().transpose()
+            << std::endl;
+  std::cout << "    Error = " << (lm.getModelParameters() - ATruth).transpose()
+            << std::endl;
+  std::cout << "    Error Magnitude = "
+            << (lm.getModelParameters() - ATruth).norm() << std::endl;
   return 0;
 }

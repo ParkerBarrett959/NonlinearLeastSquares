@@ -48,6 +48,22 @@ public:
   }
 
   /**
+   * Compute the least squares cost function at some given values of A
+   *
+   * @param A: The parameters to compute the cost function at
+   *
+   * @return J The sum of the squares of the residuals
+   */
+  double computeJ(const Eigen::VectorXd &ATest) {
+    double J = 0.0;
+    for (int i = 0; i < Y_.size(); i++) {
+      double yHati = (*mModelFunctor)(ATest, X_(i));
+      J += 0.5 * (Y_(i) - yHati) * (Y_(i) - yHati);
+    }
+    return J;
+  }
+
+  /**
    * Compute the gradient of the least squares cost function
    *
    * @return dJdA The gradient of the cost wrt the model parameters

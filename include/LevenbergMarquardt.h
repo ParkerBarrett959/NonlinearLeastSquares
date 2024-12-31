@@ -4,7 +4,7 @@
 #include "NonlinearOptimizer.h"
 
 /**
- * Gauss-Newton Nonlinear Optimizer
+ * Levenberg-Marquardt Nonlinear Optimizer
  *
  * @brief: This class inherits from the NonlinearOptimizer interface and
  * implements a Levenberg-Marquardt approach to solving the least squares
@@ -37,6 +37,9 @@ public:
     // Initial print statement
     std::cout << "Running Levenberg-Marquardt optimization..." << std::endl;
 
+    // Set damping coefficient
+    double lambda = opts_.lambda0;
+
     // Loop until convergence
     while (!optimizerConverged_ && numberSteps_ <= opts_.max_iter) {
       // Increment the iteration count
@@ -55,19 +58,48 @@ public:
         H += dyidA * dyidA.transpose();
       }
 
-      // Compute the Gauss-Newton step
-      Eigen::VectorXd hgn = H.inverse() * dJdA;
+      // Compute the Levenberg-Marquardt step with the current value of lambda
+      // and a smaller value
+      Eigen::MatrixXd I = Eigen::MatrixXd::Identity(A_.size(), A_.size());
+      Eigen::VectorXd hlm_lambdaCurr = (H + lambda * I).inverse() * dJdA;
+      Eigen::VectorXd hlm_lambdaSmaller =
+          (H + (lambda / opts_.factor) * I).inverse() * dJdA;
+
+      // Compute the cost function at each of the Levenberg-Marquardt steps
+      double JLambdaCurr = computeJ(A_ - hlm_lambdaCurr);
+      double JLambdaSmaller = computeJ(A_ - hlm_lambdaSmaller);
+
+      // Check for both new costs being worse. In this case, lambda should be
+      // increased which will have the effect of damping (decreasing) the step.
+      if (JLambdaCurr > J && JLambdaSmaller > J) {
+        lambda *= opts_.factor;
+        continue;
+      }
+
+      // If the smaller lambda value reduced the cost, this value is used and
+      // the corresponding step is applied. Smaller values of lambda trend the
+      // solver towards Gauss-Newton which performs better near the equilibrium.
+      // If the larger lambda was the only improvement, this will be used
+      // instead. Larger values of lambda trend the problem closer towards
+      // Gradient Descent.
+      Eigen::VectorXd hlm = Eigen::VectorXd::Zero(A_.size());
+      if (JLambdaSmaller <= J) {
+        lambda = lambda / opts_.factor;
+        hlm = hlm_lambdaSmaller;
+      } else {
+        hlm = hlm_lambdaCurr;
+      }
 
       // Update the model parameters
-      A_ = A_ - hgn;
+      A_ = A_ - hlm;
 
       // Check for convergence and print step
-      if (hgn.norm() < opts_.convergence_criterion) {
+      if (hlm.norm() < opts_.convergence_criterion) {
         if (opts_.print_steps) {
-          std::cout << "Gauss-Newton converged!" << std::endl;
+          std::cout << "Levenberg-Marquardt converged!" << std::endl;
           std::cout << "Number of Iterations: " << numberSteps_ << std::endl;
           std::cout << "Cost: " << J << std::endl;
-          std::cout << "Final Step Size: " << hgn.norm() << std::endl;
+          std::cout << "Final Step Size: " << hlm.norm() << std::endl;
           std::cout << "Final Model Parameters: " << A_.transpose()
                     << std::endl;
         }
@@ -75,11 +107,11 @@ public:
       } else {
         if (opts_.print_steps) {
           std::cout << "i = " << numberSteps_ << ", J = " << J
-                    << ", step = " << hgn.norm() << std::endl;
+                    << ", step = " << hlm.norm() << std::endl;
         }
       }
     }
-    std::cout << "Gauss-Newton Complete!" << std::endl;
+    std::cout << "Levenber-Marquardt Complete!" << std::endl;
     return true;
   }
 };

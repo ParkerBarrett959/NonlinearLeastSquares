@@ -21,6 +21,7 @@ struct SolverOpts {
 
   // Levenberg-Marquardt Specific Options
   double lambda0 = 1.0; // Initial damping coefficient
+  double factor = 2.0;  // Factor to scale damping coefficient by
 };
 
 #endif // SOLVER_OPTS_H
