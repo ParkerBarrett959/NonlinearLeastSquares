@@ -1,5 +1,6 @@
-![image](doc/NonlinearLeastSquares.PNG)
-A small C++ header-only library and example executables for solving single-input single-output nonlinear least squares problems. The library includes support for Gradient Descent, Gauss-Newton and Levenberg-Marquardt solvers and a simple interface for defining and solving custom nonlinear functions.
+# Nonlinear Least Squares
+
+A C++ header-only library and example executables for solving single-input single-output nonlinear least squares problems. The library includes support for Gradient Descent, Gauss-Newton and Levenberg-Marquardt solvers and a simple interface for defining and solving custom nonlinear functions.
 
 # Dependencies
 * C++ 11 (or greater) <br />
