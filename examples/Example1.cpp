@@ -40,7 +40,7 @@ int main() {
   A << 11.8, -13.8, 25.0, -50.0;
 
   // Set the solver options
-  SolverOpts optsGD = {.max_iter = 1000,
+  SolverOpts optsGD = {.max_iter = 5000,
                        .convergence_criterion = 1.0e-3,
                        .alpha = 0.002,
                        .print_steps = false};

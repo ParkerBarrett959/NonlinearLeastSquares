@@ -75,7 +75,7 @@ public:
   /**
    * Number of steps run by the optimizer getter function
    */
-  bool getNumberSteps() { return numberSteps_; }
+  int getNumberSteps() { return numberSteps_; }
 
   /**
    * Model parameter getter function
