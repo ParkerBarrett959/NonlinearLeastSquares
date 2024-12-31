@@ -26,8 +26,8 @@ int main() {
 
   // Generate simulated data
   double start = 0.0;
-  double end = 10.0;
-  int numPoints = 1000;
+  double end = 100.0;
+  int numPoints = 100;
   Eigen::VectorXd X(numPoints);
   Eigen::VectorXd Y(numPoints);
   for (int i = 0; i < numPoints; i++) {
@@ -40,14 +40,16 @@ int main() {
   A << 11.8, -13.8, 25.0, -50.0;
 
   // Set the solver options
-  SolverOpts optsGD = {.max_iter = 5000,
-                       .convergence_criterion = 1.0e-3,
-                       .alpha = 0.002,
-                       .print_steps = false};
+  SolverOpts optsGD = {.max_iter = 50000,
+                       .convergence_criterion = 1.0e-6,
+                       .print_steps = false,
+                       .alpha = 1.0e-9,
+                       .lambda0 = 1.0};
   SolverOpts optsGN = {.max_iter = 1000,
                        .convergence_criterion = 1.0e-6,
+                       .print_steps = false,
                        .alpha = 1.0,
-                       .print_steps = false};
+                       .lambda0 = 1.0};
 
   // Create a Gradient Descent Nonlinear Optimizer
   GradientDescent gd(modelPtr, A, X, Y, optsGD);
