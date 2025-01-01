@@ -57,8 +57,8 @@ int main() {
                        .convergence_criterion = 1.0e-12,
                        .print_steps = false,
                        .alpha = 1.0,
-                       .lambda0 = 100.0,
-                       .factor = 1.5};
+                       .lambda0 = 10.0e-4,
+                       .factor = 10.0};
 
   // Create a Gradient Descent Nonlinear Optimizer
   GradientDescent gd(modelPtr, A, X, Y, optsGD);
