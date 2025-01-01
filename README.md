@@ -16,11 +16,14 @@ make
 # Run Examples
 After building, run the examples with
 ```
-# Run example 1
+# Run example 1 - A Linear Problem
 ./example1
 
-# Run Example 2
+# Run Example 2 - An Easy (Convex) Nonlinear Problem
 ./example2
+
+# Run Example 3 - A Hard (Non-Convex) Nonlinear Problem
+./example3
 ```
 # Nonlinear Least Squares Problem Formulation
 
