@@ -248,4 +248,5 @@ Finally, rebuild and the new executable, ```CustomProblem``` should be generated
 ```
 # Sources
 - Gavin, H. P. (2024, May 5). The Levenberg-Marquardt algorithm for nonlinear least squares curve-fitting problems.
+- Dellaert, F., & Kaess, M. (2006). Factor graphs for robot perception. IEEE Transactions on Robotics, 22(3), 437-446. https://doi.org/10.1109/TRO.2006.876525
 - https://en.wikipedia.org/wiki/Levenberg%E2%80%93Marquardt_algorithm
